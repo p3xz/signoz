@@ -12,6 +12,7 @@ import type { SectionEditorContext } from '../sectionContext';
 import { getSectionDefault, resolveSectionEditor } from '../sectionRegistry';
 import SettingsSection from '../SettingsSection/SettingsSection';
 import { isChanged } from '../utils/changes';
+import { getScatterAxisColumnNames } from '../utils/scatterAxisColumns';
 import { getSizeColumnLabel } from '../utils/sizeColumnLabel';
 import SectionHeaderQuickAdd from './SectionHeaderQuickAdd';
 
@@ -132,6 +133,7 @@ function SectionSlot({
 		tableColumns,
 		groupColumns,
 		sizeColumnLabel: getSizeColumnLabel(spec, tableColumns),
+		axisColumnNames: getScatterAxisColumnNames(spec, tableColumns),
 		signal,
 		panelKind,
 		onChangePanelKind,
