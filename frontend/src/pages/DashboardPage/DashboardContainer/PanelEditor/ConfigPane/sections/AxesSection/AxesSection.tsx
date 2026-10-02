@@ -6,9 +6,16 @@ import type {
 import ConfigField from '../../controls/ConfigField/ConfigField';
 import ConfigInlineField from '../../controls/ConfigInlineField/ConfigInlineField';
 import ConfigRangeInput from '../../controls/ConfigRangeInput/ConfigRangeInput';
+import { isRangeInverted } from '../../controls/ConfigRangeInput/utils';
 import ConfigTiles from '../../controls/ConfigTiles/ConfigTiles';
 import { createFieldResetter } from '../../utils/changes';
-import { AxisScale, RANGE_HELP, SCALE_HELP, SCALE_OPTIONS } from './options';
+import {
+	AxisScale,
+	RANGE_HELP,
+	RANGE_INVERTED_ERROR,
+	SCALE_HELP,
+	SCALE_OPTIONS,
+} from './options';
 
 import styles from './AxesSection.module.scss';
 
@@ -29,7 +36,15 @@ function AxesSection({
 		<ConfigField label="Y axis" {...reset('softMin', 'softMax', 'isLogScale')}>
 			<div className={styles.fields}>
 				{controls.minMax && (
-					<ConfigInlineField label="Range" help={RANGE_HELP}>
+					<ConfigInlineField
+						label="Range"
+						help={RANGE_HELP}
+						error={
+							isRangeInverted(value?.softMin, value?.softMax)
+								? RANGE_INVERTED_ERROR
+								: undefined
+						}
+					>
 						<ConfigRangeInput
 							testIdPrefix="panel-editor-v2"
 							min={value?.softMin}

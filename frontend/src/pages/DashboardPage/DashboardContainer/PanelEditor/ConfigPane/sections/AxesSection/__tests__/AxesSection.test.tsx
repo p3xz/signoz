@@ -79,4 +79,21 @@ describe('AxesSection', () => {
 
 		expect(onChange).toHaveBeenCalledWith({ isLogScale: true });
 	});
+
+	it('flags a soft min above the soft max', () => {
+		render(
+			<AxesSection
+				value={{ softMin: 23, softMax: 12 }}
+				controls={{ minMax: true }}
+				onChange={jest.fn()}
+			/>,
+		);
+
+		expect(
+			screen.getByText("Min can't be greater than Max."),
+		).toBeInTheDocument();
+		expect(
+			screen.queryByText(/The axis always shows at least this range/),
+		).not.toBeInTheDocument();
+	});
 });

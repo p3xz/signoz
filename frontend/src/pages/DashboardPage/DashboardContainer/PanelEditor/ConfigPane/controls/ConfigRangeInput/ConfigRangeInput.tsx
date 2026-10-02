@@ -1,5 +1,7 @@
 import ConfigNumberInput from '../ConfigNumberInput/ConfigNumberInput';
 
+import { isRangeInverted } from './utils';
+
 import styles from './ConfigRangeInput.module.scss';
 
 interface ConfigRangeInputProps {
@@ -18,11 +20,14 @@ function ConfigRangeInput({
 	onChangeMin,
 	onChangeMax,
 }: ConfigRangeInputProps): JSX.Element {
+	const inverted = isRangeInverted(min, max);
+
 	return (
 		<div className={styles.range}>
 			<ConfigNumberInput
 				testId={`${testIdPrefix}-soft-min`}
 				placeholder="Min"
+				invalid={inverted}
 				value={min}
 				onChange={onChangeMin}
 			/>
@@ -30,6 +35,7 @@ function ConfigRangeInput({
 			<ConfigNumberInput
 				testId={`${testIdPrefix}-soft-max`}
 				placeholder="Max"
+				invalid={inverted}
 				value={max}
 				onChange={onChangeMax}
 			/>

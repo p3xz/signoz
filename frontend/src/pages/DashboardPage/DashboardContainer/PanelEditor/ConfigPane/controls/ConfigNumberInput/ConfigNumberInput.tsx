@@ -8,6 +8,7 @@ interface ConfigNumberInputProps {
 	/** Omitted for an input whose row already names it. */
 	label?: string;
 	placeholder?: string;
+	invalid?: boolean;
 	value: number | null | undefined;
 	onChange: (next: number | null) => void;
 }
@@ -17,6 +18,7 @@ function ConfigNumberInput({
 	testId,
 	label,
 	placeholder = 'Auto',
+	invalid,
 	value,
 	onChange,
 }: ConfigNumberInputProps): JSX.Element {
@@ -30,6 +32,7 @@ function ConfigNumberInput({
 			data-testid={testId}
 			type="number"
 			placeholder={placeholder}
+			status={invalid ? 'error' : undefined}
 			value={value ?? ''}
 			onChange={handleChange}
 		/>
