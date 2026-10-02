@@ -4,20 +4,11 @@ import type {
 } from 'pages/DashboardPage/DashboardContainer/Panels/types/sections';
 
 import ConfigField from '../../controls/ConfigField/ConfigField';
-import ConfigInlineField from '../../controls/ConfigInlineField/ConfigInlineField';
-import ConfigRangeInput from '../../controls/ConfigRangeInput/ConfigRangeInput';
-import { isRangeInverted } from '../../controls/ConfigRangeInput/utils';
-import ConfigTiles from '../../controls/ConfigTiles/ConfigTiles';
 import { createFieldResetter } from '../../utils/changes';
-import {
-	AxisScale,
-	RANGE_HELP,
-	RANGE_INVERTED_ERROR,
-	SCALE_HELP,
-	SCALE_OPTIONS,
-} from './options';
-
-import styles from './AxesSection.module.scss';
+import AxisFields from './AxisFields';
+import AxisRangeField from './AxisRangeField';
+import AxisScaleField from './AxisScaleField';
+import { LOG_SCALE_OPTIONS, SCALE_HELP } from './options';
 
 /**
  * Edits the `axes` slice of a panel spec: soft Y-axis min/max bounds and the
@@ -30,45 +21,31 @@ function AxesSection({
 	onChange,
 }: SectionEditorProps<SectionKind.Axes>): JSX.Element {
 	const reset = createFieldResetter(value, defaultValue, onChange);
-	const scale = value?.isLogScale ? AxisScale.LOG : AxisScale.LINEAR;
 
 	return (
 		<ConfigField label="Y axis" {...reset('softMin', 'softMax', 'isLogScale')}>
-			<div className={styles.fields}>
+			<AxisFields>
 				{controls.minMax && (
-					<ConfigInlineField
-						label="Range"
-						help={RANGE_HELP}
-						error={
-							isRangeInverted(value?.softMin, value?.softMax)
-								? RANGE_INVERTED_ERROR
-								: undefined
-						}
-					>
-						<ConfigRangeInput
-							testIdPrefix="panel-editor-v2"
-							min={value?.softMin}
-							max={value?.softMax}
-							onChangeMin={(softMin): void => onChange({ ...value, softMin })}
-							onChangeMax={(softMax): void => onChange({ ...value, softMax })}
-						/>
-					</ConfigInlineField>
+					<AxisRangeField
+						testIdPrefix="panel-editor-v2"
+						value={value}
+						onChange={(bounds): void => onChange({ ...value, ...bounds })}
+					/>
 				)}
 
 				{controls.logScale && (
-					<ConfigField label="Scale" help={SCALE_HELP[scale]}>
-						<ConfigTiles
-							testId="panel-editor-v2-log-scale"
-							aria-label="Y-axis scale"
-							value={scale}
-							items={SCALE_OPTIONS}
-							onChange={(next): void =>
-								onChange({ ...value, isLogScale: next === AxisScale.LOG })
-							}
-						/>
-					</ConfigField>
+					<AxisScaleField
+						testId="panel-editor-v2-log-scale"
+						aria-label="Y-axis scale"
+						value={value?.isLogScale ? 'log' : 'linear'}
+						items={LOG_SCALE_OPTIONS}
+						help={SCALE_HELP}
+						onChange={(next): void =>
+							onChange({ ...value, isLogScale: next === 'log' })
+						}
+					/>
 				)}
-			</div>
+			</AxisFields>
 		</ConfigField>
 	);
 }
